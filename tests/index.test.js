@@ -1,4 +1,4 @@
-const { add, subtract } = require('./math');
+const { add, subtract } = require('../src/index.js');
 
 describe('Math Functions', () => {
   test('should add two numbers', () => {
