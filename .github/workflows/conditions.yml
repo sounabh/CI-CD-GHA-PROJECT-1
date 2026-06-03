@@ -1,0 +1,47 @@
+name: Conditions
+
+on:
+  push:
+    branches: [main,develop]
+  pull_request:
+
+jobs:
+   cond-jobs:
+     runs-on: ubuntu-latest
+     steps:
+        - uses: actions/checkout@v4
+        
+        - name: Prod deployment
+          if: github.ref == 'refs/heads/main'
+          run: echo "Deploying to Production"
+        
+        - name: Staging deployment
+          if: github.ref == 'refs/heads/develop'
+          run: echo "Deploying to staging"
+
+        - name: PR check
+          if: github.event_name == 'pull_request'
+          run: echo "Running PR checks in develop branch"  
+
+        - name: Cleanup
+          if: always()
+          run: echo "This always runs"
+      
+      # Run only if previous steps succeeded
+        - name: Success only
+          if: success()
+          run: echo "All previous steps succeeded"
+      
+      # Run only if previous steps failed
+        - name: On failure
+          if: failure()
+          run: echo "Something failed"  
+
+
+   production-deploy:
+    needs: cond-jobs
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Deploy
+        run: echo "This job only runs on push to main"
