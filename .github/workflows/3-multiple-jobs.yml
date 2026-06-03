@@ -1,6 +1,6 @@
 name: Multiple jobs
 
-on: push
+on: workflow_dispatch
 
 jobs:
 
